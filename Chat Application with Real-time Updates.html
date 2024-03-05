@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ChatApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Chat Application</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+        h2 {
+            margin-top: 0;
+        }
+        .chat-box {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .message {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 5px 10px;
+            margin-bottom: 5px;
+        }
+        .message.sent {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .message.received {
+            background-color: #28a745;
+            color: #fff;
+        }
+        input[type="text"] {
+            width: calc(100% - 80px);
+            padding: 10px;
+            border-radius: 5px 0 0 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button {
+            width: 80px;
+            padding: 10px;
+            border-radius: 0 5px 5px 0;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        angular.module('ChatApp', [])
+            .controller('ChatController', function($scope) {
+                $scope.messages = [];
+                $scope.newMessage = '';
+
+                $scope.sendMessage = function() {
+                    if ($scope.newMessage.trim() !== '') {
+                        $scope.messages.push({ content: $scope.newMessage, sender: 'You' });
+                        $scope.newMessage = '';
+                    }
+                };
+            });
+    </script>
+</head>
+<body ng-controller="ChatController">
+    <div class="container">
+        <h2>Real-time Chat Application</h2>
+        <div class="chat-box">
+            <div class="message sent" ng-repeat="message in messages | filter: { sender: 'You' }">{{ message.content }}</div>
+            <div class="message received" ng-repeat="message in messages | filter: { sender: '!You' }">{{ message.content }}</div>
+        </div>
+        <div>
+            <input type="text" placeholder="Type your message..." ng-model="newMessage" ng-keypress="$event.keyCode === 13 && sendMessage()">
+            <button ng-click="sendMessage()">Send</button>
+        </div>
+    </div>
+</body>
+</html>
